@@ -1,0 +1,632 @@
+{
+	"info": {
+		"_postman_id": "6020a649-8eca-4319-b81c-dc82187b9001",
+		"name": "Tests for ClickUp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14529927"
+	},
+	"item": [
+		{
+			"name": "Tests for Goals",
+			"item": [
+				{
+					"name": "Get Goals",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for Content-Type header\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"// Test for response body structure\r",
+									"pm.test(\"Response has goals and folders arrays\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"goals\");\r",
+									"    pm.expect(jsonData).to.have.property(\"folders\");\r",
+									"    pm.expect(jsonData.goals).to.be.an(\"array\");\r",
+									"    pm.expect(jsonData.folders).to.be.an(\"array\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}team/{{team_id}}/goal?include_completed=true",
+							"host": [
+								"{{url}}team"
+							],
+							"path": [
+								"{{team_id}}",
+								"goal"
+							],
+							"query": [
+								{
+									"key": "include_completed",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Goal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for Content-Type header\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"// Save goal_id to environment\r",
+									"pm.test(\"Save goal_id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.environment.set(\"goal_id\", jsonData.goal.id);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Goal Name\",\r\n  \"due_date\": 1568036964079,\r\n  \"description\": \"Goal Description\",\r\n  \"multiple_owners\": true,\r\n  \"owners\": [42467672],\r\n  \"color\": \"#32a852\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}team/{{team_id}}/goal",
+							"host": [
+								"{{url}}team"
+							],
+							"path": [
+								"{{team_id}}",
+								"goal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Goal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for Content-Type header\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"// Test for goal details\r",
+									"pm.test(\"Goal details are correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property(\"id\", pm.environment.get(\"goal_id\"));\r",
+									"    pm.expect(jsonData).to.have.property(\"name\", \"New Goal\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}goal/{{goal_id}}",
+							"host": [
+								"{{url}}goal"
+							],
+							"path": [
+								"{{goal_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Goal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for Content-Type header\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"// Test for updated goal details\r",
+									"pm.test(\"Goal is updated\", function () {\r",
+									"    var jsonData = pm.response.json().goal; // Assuming \"goal\" is the key containing updated goal details\r",
+									"    pm.expect(jsonData).to.have.property(\"name\", \"Updated Goal\");\r",
+									"    // Add additional checks for other properties if necessary\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"name\": \"Updated Goal\",\r\n\"description\": \"This is an updated test goal\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}goal/{{goal_id}}",
+							"host": [
+								"{{url}}goal"
+							],
+							"path": [
+								"{{goal_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Goal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for success message\r",
+									"pm.test(\"Goal is deleted\", function () {\r",
+									"    var responseText = pm.response.text();\r",
+									"    pm.expect(responseText).to.include(\"OK\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}goal/{{goal_id}}",
+							"host": [
+								"{{url}}goal"
+							],
+							"path": [
+								"{{goal_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Goal Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for Content-Type header\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"// Save goal_id1 to environment\r",
+									"pm.test(\"Save goal_id1\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.environment.set(\"goal_id1\", jsonData.goal.id);\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Goal Name NEW\",\r\n  \"due_date\": 1568036964079,\r\n  \"description\": \"Goal Description NEW\",\r\n  \"multiple_owners\": true,\r\n  \"owners\": [42467672],\r\n  \"color\": \"#32a852\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}team/{{team_id}}/goal",
+							"host": [
+								"{{url}}team"
+							],
+							"path": [
+								"{{team_id}}",
+								"goal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Key Result",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for Content-Type header\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"// Save key_result_id to environment\r",
+									"pm.test(\"Save key_result_id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.environment.set(\"key_result_id\", jsonData.key_result.id);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Complete Project X\",\r\n  \"owners\": [42467672],\r\n  \"type\": \"number\",\r\n  \"steps_start\": 0,\r\n  \"steps_end\": 100,\r\n  \"unit\": \"percent\",\r\n  \"task_ids\": [],\r\n  \"list_ids\": []\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}goal/{{goal_id1}}/key_result",
+							"host": [
+								"{{url}}goal"
+							],
+							"path": [
+								"{{goal_id1}}",
+								"key_result"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Key Result",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for Content-Type header\r",
+									"pm.test(\"Content-Type is application/json\", function () {\r",
+									"    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+									"});\r",
+									"\r",
+									"// Test for updated key result details\r",
+									"pm.test(\"Key result is updated\", function () {\r",
+									"    var jsonData = pm.response.json().key_result; // Отримуємо об'єкт key_result з відповіді\r",
+									"    pm.expect(jsonData).to.have.property(\"id\", pm.environment.get(\"key_result_id\"));\r",
+									"    pm.expect(jsonData).to.have.property(\"name\", \"Updated Key Result\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Updated Key Result\",\r\n    \"type\": \"number\",\r\n    \"steps_start\": 0,\r\n    \"steps_end\": 200,\r\n    \"unit\": \"percentage\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}key_result/{{key_result_id}}",
+							"host": [
+								"{{url}}key_result"
+							],
+							"path": [
+								"{{key_result_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Key Result",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test for status code 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test for success message\r",
+									"pm.test(\"Key result is deleted\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.be.empty; // Перевіряє, що відповідь є порожньою\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{url}}key_result/{{key_result_id}}",
+							"host": [
+								"{{url}}key_result"
+							],
+							"path": [
+								"{{key_result_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check teams data (it's my own test for some verification that we didn't have in Hometask",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{api_token}}"
+							}
+						],
+						"url": {
+							"raw": "https://api.clickup.com/api/v2/team",
+							"protocol": "https",
+							"host": [
+								"api",
+								"clickup",
+								"com"
+							],
+							"path": [
+								"api",
+								"v2",
+								"team"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "oauth2",
+				"oauth2": [
+					{
+						"key": "addTokenTo",
+						"value": "header",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "pk_42467672_DTN1ASBU0IBSWIURVVTLLY0TXZB051JL",
+			"type": "string"
+		}
+	]
+}
